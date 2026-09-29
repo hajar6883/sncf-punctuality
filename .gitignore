@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Data: raw snapshots are re-downloadable, the warehouse is rebuilt from them
+data/
+*.duckdb
+*.duckdb.wal
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,16 @@
+[project]
+name = "sncf-punctuality"
+version = "0.1.0"
+description = "SNCF punctuality: open data -> DuckDB/dbt -> Qlik Sense dashboard and forecast"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "duckdb>=1.1",
+    "requests>=2.32",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
