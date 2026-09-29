@@ -5,9 +5,14 @@ Work in progress. Pipeline: SNCF open data → DuckDB → dbt (star schema) → 
 ## Quick start
 
 ```bash
-uv sync                                  # install dependencies (Python 3.11)
-uv run python -m ingestion.download      # snapshot the SNCF datasets into data/raw/
-uv run python -m ingestion.load          # load snapshots into data/warehouse.duckdb (idempotent)
-uv run python -m ingestion.data_quality  # regenerate docs/data_quality.md
-uv run pytest
+uv sync      # install dependencies (Python 3.11)
+make all     # download -> load -> data-quality report -> dbt build (+ tests) -> pytest
 ```
+
+Steps can be run one by one: `make download`, `make load`, `make quality`, `make dbt`, `make test`.
+Marts are written to `data/marts/*.parquet` (loaded by Qlik).
+
+## Docs
+
+- [Data quality report](docs/data_quality.md)
+- [Data model](docs/data_model.md)

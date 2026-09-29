@@ -18,6 +18,7 @@ models:
       +schema: intermediate
     marts:
       +materialized: external
+      +schema: marts
       +format: parquet
 
 seeds:
