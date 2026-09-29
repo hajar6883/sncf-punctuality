@@ -1,6 +1,6 @@
 # Ponctualité SNCF — de l'open data au tableau de bord Qlik Sense
 
-Work in progress. Pipeline: SNCF open data → DuckDB → dbt (star schema) → Qlik Sense, plus a next-month punctuality forecast.
+Pipeline: SNCF open data → DuckDB → dbt (star schema) → Qlik Sense, plus a next-month punctuality forecast.
 
 ## Quick start
 
@@ -16,4 +16,3 @@ Marts are written to `data/marts/*.parquet` (loaded by Qlik).
 
 - [Data quality report](docs/data_quality.md)
 - [Data model](docs/data_model.md)
-- Qlik Sense: [load script](qlik/load_script.qvs), [model notes](qlik/model_notes.md), [master measures](qlik/master_measures.md), [sheet plan](qlik/sheet_plan.md), [interview drill](qlik/interview_drill.md)

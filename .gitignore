@@ -17,3 +17,6 @@ target/
 dbt_packages/
 logs/
 .user.yml
+
+# Qlik app and interview prep: kept local
+qlik/
