@@ -1,12 +1,6 @@
-"""Load raw CSV snapshots into DuckDB, idempotently, with a load log.
+"""Idempotent load of raw snapshots into DuckDB (all VARCHAR; typing happens in dbt).
 
-Re-running never duplicates rows, at two levels:
-  1. file level: a file whose SHA-256 is already in raw._load_log is skipped;
-  2. row level: each row carries _row_hash (md5 of all its values) and is inserted only
-     if that hash is not already in the table. A corrected row published later by SNCF
-     has a new hash, so it is appended next to the old version; staging keeps the latest.
-
-Raw tables keep every column as VARCHAR, exactly as published. Typing happens in dbt staging.
+Known files are skipped by SHA-256; rows are inserted only if their _row_hash is new.
 """
 
 import hashlib
@@ -26,7 +20,7 @@ create table if not exists raw._load_log (
     file_sha256    varchar,
     rows_in_file   bigint,
     rows_inserted  bigint,
-    status         varchar,   -- 'loaded' or 'skipped_known_file'
+    status         varchar,
     loaded_at      timestamp default current_timestamp
 )
 """
@@ -37,7 +31,7 @@ def file_sha256(path: Path) -> str:
 
 
 def load_file(con: duckdb.DuckDBPyConnection, dataset_id: str, table: str, path: Path, load_id: str) -> int:
-    """Load one snapshot into raw.<table>. Returns the number of rows inserted."""
+    """Load one snapshot into raw.<table>; return rows inserted."""
     con.execute("create schema if not exists raw")
     con.execute(LOAD_LOG_DDL)
     digest = file_sha256(path)
@@ -55,8 +49,7 @@ def load_file(con: duckdb.DuckDBPyConnection, dataset_id: str, table: str, path:
 
     con.execute("begin transaction")
     try:
-        # `src::varchar` renders the whole row as a struct string ({'date': 2026-06, ...}),
-        # so the hash covers every column name and value.
+        # src::varchar = the whole row as text, so the hash covers every column
         con.execute(
             """
             create or replace temp table _incoming as
@@ -67,7 +60,6 @@ def load_file(con: duckdb.DuckDBPyConnection, dataset_id: str, table: str, path:
         )
         rows_in_file = con.execute("select count(*) from _incoming").fetchone()[0]
 
-        # First load creates the table with the file's columns plus audit columns.
         con.execute(
             f"""
             create table if not exists raw.{table} as
@@ -75,9 +67,7 @@ def load_file(con: duckdb.DuckDBPyConnection, dataset_id: str, table: str, path:
             from _incoming limit 0
             """
         )
-        # BY NAME matches columns by name, not position. If SNCF adds or renames a column,
-        # this fails loudly instead of shifting values into the wrong columns.
-        # QUALIFY also drops exact duplicate rows inside the same file (none found in profiling).
+        # BY NAME: a renamed/added source column fails loudly instead of shifting values
         inserted = con.execute(
             f"""
             insert into raw.{table} by name
@@ -101,7 +91,7 @@ def load_file(con: duckdb.DuckDBPyConnection, dataset_id: str, table: str, path:
 
 
 def load_all(con: duckdb.DuckDBPyConnection, raw_dir: Path = RAW_DIR) -> dict[str, int]:
-    """Load every snapshot of every dataset, oldest first. Returns rows inserted per table."""
+    """Load all snapshots, oldest first; return rows inserted per table."""
     load_id = str(uuid.uuid4())
     inserted = {}
     for dataset_id, table in DATASETS.items():

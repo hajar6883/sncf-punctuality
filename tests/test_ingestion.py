@@ -1,4 +1,4 @@
-"""Idempotency tests for ingestion. Offline: they use a small TGV-shaped fixture, not the API."""
+"""Ingestion idempotency tests (offline fixture)."""
 
 import shutil
 from datetime import date
@@ -35,7 +35,7 @@ def count(con, table: str = TABLE) -> int:
 
 def test_first_run_loads_all_rows_including_multiline_comment(con, raw_dir):
     load_all(con, raw_dir)
-    assert count(con) == 3  # 3 records even though the file has 4 data lines
+    assert count(con) == 3  # 4 data lines, 3 records
     comment = con.execute(
         f"select commentaires_retard_arrivee from {TABLE} where gare_arrivee = 'LILLE'"
     ).fetchone()[0]
@@ -56,7 +56,6 @@ def test_second_run_inserts_zero_rows(con, raw_dir):
 
 def test_new_snapshot_only_adds_new_rows(con, raw_dir):
     load_all(con, raw_dir)
-    # Next snapshot = same history + one new month (how SNCF publishes: full export each time).
     new_row = "2026-06;National;PARIS LYON;MARSEILLE ST CHARLES;910;1;\n"
     (raw_dir / DATASET_ID / "2026-10-01.csv").write_text(FIXTURE.read_text() + new_row)
 
@@ -76,7 +75,7 @@ def test_revised_row_is_appended_not_overwritten(con, raw_dir):
     versions = con.execute(
         f"select nb_annulation from {TABLE} where gare_arrivee = 'MARSEILLE ST CHARLES' order by _loaded_at"
     ).fetchall()
-    assert versions == [("4",), ("5",)]  # both versions kept; staging will pick the latest
+    assert versions == [("4",), ("5",)]
 
 
 def test_identical_download_is_not_saved_twice(tmp_path):
