@@ -8,5 +8,6 @@ Work in progress. Pipeline: SNCF open data → DuckDB → dbt (star schema) → 
 uv sync                                  # install dependencies (Python 3.11)
 uv run python -m ingestion.download      # snapshot the SNCF datasets into data/raw/
 uv run python -m ingestion.load          # load snapshots into data/warehouse.duckdb (idempotent)
+uv run python -m ingestion.data_quality  # regenerate docs/data_quality.md
 uv run pytest
 ```
