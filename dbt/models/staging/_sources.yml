@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Loaded by ingestion/load.py; all columns VARCHAR as published by SNCF.
+    tables:
+      - name: tgv_route_monthly
+        description: regularite-mensuelle-tgv-aqst
+      - name: tgv_national_monthly
+        description: reglarite-mensuelle-tgv-nationale (official national TGV indicators)

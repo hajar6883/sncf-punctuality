@@ -53,13 +53,17 @@ month or route key itself: two tables sharing two keys would create a synthetic 
 
 From `docs/data_quality.md`:
 
-| Problem | Rule |
-|---|---|
-| Revised rows (same key, loaded twice) | keep the latest `_loaded_at` |
-| Negative train counts | null |
-| Buckets not nested (>60 > >30 or >30 > >15) | null the >30 and >60 buckets |
-| Negative average delay of late trains | null |
-| Zero trains ran | rates undefined (division guarded in Qlik) |
-| All cause shares = 0 | causes null (missing, not zero) |
-| `retard_moyen_trains_retard_sup15` | dropped (mirrors another column in 2018–2019) |
-| Empty comment columns | dropped |
+| Problem | Rule | Rows |
+|---|---|---:|
+| Revised rows (same key, loaded twice) | keep the latest `_loaded_at` | 0 today |
+| Cancellations > planned (COVID 2020) | `trains_ran` null | 63 |
+| Negative train counts | null | 43 |
+| Delay buckets break late ≥ >15 ≥ >30 ≥ >60 ≥ 0 | all three buckets null | 388 |
+| Negative average delay of late trains | null | 2 |
+| Average delay of all trains < −15 min | null (−0 to −8.8 is plausible early running; the 11 rows below −15 fall in 2019-10..2020-02, down to −472) | 11 |
+| All cause shares = 0 | causes null (missing, not zero) | 270 |
+| `retard_moyen_trains_retard_sup15` | dropped (mirrors another column in 2018–2019) | — |
+| Empty comment columns | dropped | — |
+
+Test `assert_late_trains_within_trains_ran` guarantees that `Sum(late) / Sum(ran)` never counts a late train
+without its trains ran.
