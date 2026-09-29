@@ -1,0 +1,5 @@
+date;service;gare_depart;gare_arrivee;nb_train_prevu;nb_annulation;commentaires_retard_arrivee
+2026-05;National;PARIS LYON;MARSEILLE ST CHARLES;900;4;
+2026-05;National;LYON PART DIEU;LILLE;300;2;"Ligne 1 du commentaire;
+ligne 2 du commentaire"
+2026-05;International;GENEVE;PARIS LYON;250;0;
