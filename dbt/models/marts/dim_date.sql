@@ -19,6 +19,6 @@ select
         else 'Automne'
     end as season,
     d.disruption,
-    d.disruption is not null as is_disrupted
+    (d.disruption is not null)::integer as is_disrupted
 from months as m
 left join {{ ref('disrupted_months') }} as d using (month_start)

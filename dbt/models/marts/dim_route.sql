@@ -8,7 +8,7 @@ select
     least(r.origin_station, r.destination_station) || ' ↔ ' || greatest(r.origin_station, r.destination_station) as route_pair,
     coalesce(fo.country, 'France') as origin_country,
     coalesce(fd.country, 'France') as destination_country,
-    r.origin_station like 'PARIS %' or r.destination_station like 'PARIS %' as touches_paris,
+    (r.origin_station like 'PARIS %' or r.destination_station like 'PARIS %')::integer as touches_paris,
     r.first_month,
     r.last_month,
     r.months_available

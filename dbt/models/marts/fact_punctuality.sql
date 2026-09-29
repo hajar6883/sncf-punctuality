@@ -15,7 +15,7 @@ select
     s.avg_delay_all_arrival * s.trains_ran as delay_minutes_all_arrival,
     s.avg_delay_late_arrival * s.trains_late_arrival as delay_minutes_late_arrival,
     s.avg_journey_minutes * s.trains_ran as journey_minutes,
-    s.cause_external_pct is not null as has_cause_data,
+    (s.cause_external_pct is not null)::integer as has_cause_data,
     s.arrival_comment
 from {{ ref('stg_tgv_route_monthly') }} as s
 inner join {{ ref('int_tgv_routes') }} as r using (service, origin_station, destination_station)
