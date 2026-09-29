@@ -46,8 +46,10 @@ month or route key itself: two tables sharing two keys would create a synthetic 
 - **Cause shares** are a mix within one row; their denominator is not published. The implied denominator
   matches "trains late at arrival" in only 36–73 % of rows depending on the year. Across rows, causes are weighted by trains
   late at arrival (`est_late_trains`); this is an approximation and is labelled as such.
-- **COVID period** (`is_covid_period`): 2020-03 to 2020-06 and 2020-10 to 2020-12, the months when planned
-  National TGV trains fell below 75 % of the February 2020 level.
+- **Disrupted months** (`dim_date.is_disrupted`, `disruption`): months when planned National TGV trains fell
+  below 75 % of the February 2020 level (seed `disrupted_months.csv`):
+  2019-12 (50 %, national strike against the pension reform), 2020-03..06 and 2020-10..11 (COVID, 11–72 %).
+  2020-12 (79 %) is not flagged. Exclude or mark these months in trends and forecasts.
 
 ## Cleaning rules (staging)
 

@@ -1,0 +1,21 @@
+version: 2
+
+seeds:
+  - name: delay_causes
+    description: The six SNCF delay-cause categories (labels from the dataset metadata).
+    columns:
+      - name: cause_key
+        tests: [unique, not_null]
+  - name: foreign_stations
+    description: Stations outside France; every other station is in France. ITALIE is a country, not a station.
+    columns:
+      - name: station
+        tests: [unique, not_null]
+  - name: disrupted_months
+    description: Months with planned National TGV trains below 75% of Feb 2020 (see docs/data_model.md).
+    config:
+      column_types:
+        month_start: date
+    columns:
+      - name: month_start
+        tests: [unique, not_null]

@@ -1,0 +1,7 @@
+cause_key,source_column,cause_label_fr,cause_label_en,sort_order
+external,cause_external_pct,Causes externes,External causes,1
+infrastructure,cause_infrastructure_pct,Infrastructure,Infrastructure,2
+traffic_management,cause_traffic_management_pct,Gestion du trafic,Traffic management,3
+rolling_stock,cause_rolling_stock_pct,Matériel roulant,Rolling stock,4
+station_management,cause_station_management_pct,Gestion en gare et réutilisation de matériel,Station management and stock reuse,5
+passenger_handling,cause_passenger_handling_pct,Prise en charge voyageurs,Passenger handling,6

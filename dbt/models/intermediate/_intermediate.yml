@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: int_tgv_routes
+    description: One row per service x origin x destination, with its history span.
+    columns:
+      - name: route_key
+        tests: [unique, not_null]
+  - name: int_tgv_delay_causes_unpivoted
+    description: Cause shares as rows (cause becomes a dimension). UNPIVOT drops null shares.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [month_start, service, origin_station, destination_station, cause_key]
