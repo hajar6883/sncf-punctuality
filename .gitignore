@@ -13,3 +13,7 @@ data/
 .DS_Store
 .idea/
 .vscode/
+target/
+dbt_packages/
+logs/
+.user.yml

@@ -1,0 +1,8 @@
+sncf_punctuality:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DUCKDB_PATH', '../data/warehouse.duckdb') }}"
+      external_root: "{{ env_var('MARTS_DIR', '../data/marts') }}"
+      threads: 4
